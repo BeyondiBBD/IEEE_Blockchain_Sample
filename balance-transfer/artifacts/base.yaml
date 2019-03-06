@@ -8,6 +8,8 @@ services:
   peer-base:
     image: hyperledger/fabric-peer
     environment:
+      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=ledger.state.orgs:5984
       - CORE_VM_ENDPOINT=unix:///host/var/run/docker.sock
       # the following setting starts chaincode containers on the same
       # bridge network as the peers
@@ -16,7 +18,6 @@ services:
       - FABRIC_LOGGING_SPEC=DEBUG
       - CORE_PEER_GOSSIP_USELEADERELECTION=true
       - CORE_PEER_GOSSIP_ORGLEADER=false
-      - CORE_LEDGER_STATE_STATEDATABASE=CouchDB
       # The following setting skips the gossip handshake since we are
       # are not doing mutual TLS
       - CORE_PEER_GOSSIP_SKIPHANDSHAKE=true

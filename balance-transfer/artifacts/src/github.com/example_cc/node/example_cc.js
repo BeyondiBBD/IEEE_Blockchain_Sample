@@ -11,7 +11,7 @@ var Chaincode = class {
 
   // Initialize the chaincode
   async Init(stub) {
-    console.info('========= example_cc Init =========');
+    console.info('========= example_cc Init1 =========');
     let ret = stub.getFunctionAndParameters();
     console.info(ret);
     let args = ret.params;
@@ -19,20 +19,27 @@ var Chaincode = class {
     if (args.length != 4) {
       return shim.error('Incorrect number of arguments. Expecting 4');
     }
-
     let A = args[0];
     let B = args[2];
     let Aval = args[1];
     let Bval = args[3];
 
-    if (typeof parseInt(Aval) !== 'number' || typeof parseInt(Bval) !== 'number') {
+    let objA = {
+      balance : Aval
+    };
+
+    let objB = {
+      balance : Bval
+    };
+
+    if (typeof parseInt(objA.balance) !== 'number' || typeof parseInt(objB.balance) !== 'number') {
       return shim.error('Expecting integer value for asset holding');
     }
 
     try {
-      await stub.putState(A, Buffer.from(Aval));
+      await stub.putState(A, Buffer.from(JSON.stringify(objA)));
       try {
-        await stub.putState(B, Buffer.from(Bval));
+        await stub.putState(B, Buffer.from(JSON.stringify(objB)));
         return shim.success();
       } catch (err) {
         return shim.error(err);
@@ -77,27 +84,31 @@ var Chaincode = class {
     if (!Avalbytes) {
       throw new Error('Failed to get state of asset holder A');
     }
-    let Aval = parseInt(Avalbytes.toString());
+
+    let valueA = JSON.parse(Avalbytes);
+    console.log("valuea",valueA);
+    
 
     let Bvalbytes = await stub.getState(B);
     if (!Bvalbytes) {
       throw new Error('Failed to get state of asset holder B');
     }
+    let valueB = JSON.parse(Bvalbytes);
+    console.log("valuea",valueB);
 
-    let Bval = parseInt(Bvalbytes.toString());
     // Perform the execution
     let amount = parseInt(args[2]);
     if (typeof amount !== 'number') {
       throw new Error('Expecting integer value for amount to be transaferred');
     }
 
-    Aval = Aval - amount;
-    Bval = Bval + amount;
-    console.info(util.format('Aval = %d, Bval = %d\n', Aval, Bval));
+    valueA.balance = Number(valueA.balance) - amount;
+    valueB.balance = Number(valueB.balance) + amount;
+    
 
     // Write the states back to the ledger
-    await stub.putState(A, Buffer.from(Aval.toString()));
-    await stub.putState(B, Buffer.from(Bval.toString()));
+    await stub.putState(A,Buffer.from(JSON.stringify(valueA)));
+    await stub.putState(B, Buffer.from(JSON.stringify(valueB)));
 
   }
 

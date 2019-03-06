@@ -65,8 +65,8 @@ services:
         - ./channel/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/:/etc/hyperledger/crypto/peerOrg1
         - ./channel/crypto-config/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/:/etc/hyperledger/crypto/peerOrg2
 
-  ledger.state.org1:
-    container_name: ledger.state.org1
+  ledger.state.orgs:
+    container_name: ledger.state.orgs
     image: hyperledger/fabric-couchdb
     # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
     # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
@@ -82,7 +82,7 @@ services:
       file:   base.yaml
       service: peer-base
     environment:
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=ledger.state.org1:5984 
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=ledger.state.orgs:5984 
       - CORE_PEER_ID=peer0.org1.example.com
       - CORE_PEER_LOCALMSPID=Org1MSP
       - CORE_PEER_ADDRESS=peer0.org1.example.com:7051
@@ -95,7 +95,7 @@ services:
         - ./channel/crypto-config/peerOrganizations/org1.example.com/peers/peer0.org1.example.com/:/etc/hyperledger/crypto/peer
     depends_on:
       - orderer.example.com
-      - ledger.state.org1
+      - ledger.state.orgs
 
   peer1.org1.example.com:
     container_name: peer1.org1.example.com
@@ -103,7 +103,7 @@ services:
       file:   base.yaml
       service: peer-base
     environment:
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=ledger.state.org1:5984 
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=ledger.state.orgs:5984 
       - CORE_PEER_ID=peer1.org1.example.com
       - CORE_PEER_LOCALMSPID=Org1MSP
       - CORE_PEER_ADDRESS=peer1.org1.example.com:7051
@@ -116,18 +116,8 @@ services:
         - ./channel/crypto-config/peerOrganizations/org1.example.com/peers/peer1.org1.example.com/:/etc/hyperledger/crypto/peer
     depends_on:
       - orderer.example.com
-      - ledger.state.org1
+      - ledger.state.orgs
 
-  ledger.state.org2:
-    container_name: ledger.state.org2
-    image: hyperledger/fabric-couchdb
-    # Populate the COUCHDB_USER and COUCHDB_PASSWORD to set an admin user and password
-    # for CouchDB.  This will prevent CouchDB from operating in an "Admin Party" mode.
-    environment:
-      - COUCHDB_USER=
-      - COUCHDB_PASSWORD=
-    ports:
-      - 6984:5984  
 
   peer0.org2.example.com:
     container_name: peer0.org2.example.com
@@ -135,7 +125,7 @@ services:
       file:   base.yaml
       service: peer-base
     environment:
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=ledger.state.org2:5984 
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=ledger.state.orgs:5984 
       - CORE_PEER_ID=peer0.org2.example.com
       - CORE_PEER_LOCALMSPID=Org2MSP
       - CORE_PEER_ADDRESS=peer0.org2.example.com:7051
@@ -148,7 +138,7 @@ services:
         - ./channel/crypto-config/peerOrganizations/org2.example.com/peers/peer0.org2.example.com/:/etc/hyperledger/crypto/peer
     depends_on:
       - orderer.example.com
-      - ledger.state.org2
+      - ledger.state.orgs
 
   peer1.org2.example.com:
     container_name: peer1.org2.example.com
@@ -156,7 +146,7 @@ services:
       file:   base.yaml
       service: peer-base
     environment:
-      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=ledger.state.org2:5984 
+      - CORE_LEDGER_STATE_COUCHDBCONFIG_COUCHDBADDRESS=ledger.state.orgs:5984 
       - CORE_PEER_ID=peer1.org2.example.com
       - CORE_PEER_LOCALMSPID=Org2MSP
       - CORE_PEER_ADDRESS=peer1.org2.example.com:7051
@@ -169,4 +159,4 @@ services:
         - ./channel/crypto-config/peerOrganizations/org2.example.com/peers/peer1.org2.example.com/:/etc/hyperledger/crypto/peer
     depends_on:
       - orderer.example.com
-      - ledger.state.org2
+      - ledger.state.orgs
