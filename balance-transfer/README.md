@@ -227,7 +227,7 @@ curl -s -X POST \
 	"chaincodeName":"mycc",
 	"chaincodeVersion":"v0",
 	"chaincodeType": "node",
-	"args":["a","100","b","200"]
+	"args":["Ivan","100","Marko","200"]
 }'
 ```
 **NOTE:** *chaincodeType* must be set to **node** when node.js chaincode is used
@@ -243,7 +243,7 @@ curl -s -X POST \
   -d '{
 	"peers": ["peer0.org1.example.com","peer0.org2.example.com"],
 	"fcn":"move",
-	"args":["a","b","10"]
+	"args":["Ivan","Marko","10"]
 }'
 ```
 **NOTE:** Ensure that you save the Transaction ID from the response in order to pass this string in the subsequent query transactions.
@@ -252,7 +252,7 @@ curl -s -X POST \
 
 ```
 curl -s -X GET \
-  "http://localhost:4000/channels/mychannel/chaincodes/mycc?peer=peer0.org1.example.com&fcn=query&args=%5B%22a%22%5D" \
+  "http://localhost:4000/channels/mychannel/chaincodes/mycc?peer=peer0.org1.example.com&fcn=query&args=%5B%22Ivan%22%5D" \
   -H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE1NTE4OTMzNjUsInVzZXJuYW1lIjoiRGF2ZSIsIm9yZ05hbWUiOiJPcmcyIiwiaWF0IjoxNTUxODU3MzY1fQ.TeMYHtffD2E36kdkFWPD_udCCRHmeKDAFMYZTW2UcA8" \
   -H "content-type: application/json"
 ```
